@@ -6,6 +6,22 @@
 <html>
 <head>
   <jsp:include page="../common/headerWithoutJs.jsp" />  
+  <script type="text/javascript">
+  function moveQrcode(){
+	  if('${sessionScope.masterInfoVo.MCode}' != ''){
+	  	  $('#qrcode').empty();
+	  	  var qrCode = '${sessionScope.masterInfoVo.MCode}';
+	  	  jQuery('#qrcode').qrcode({
+	  	  	  width: 225,
+	  	  	  height: 225,
+	  	  	  text: qrCode
+	  	  });
+	  } else {
+	  	  alert('로그인이 필요한 메뉴입니다.');
+	  	  return;
+	  }
+  }
+  </script>
 </head>
 
 <!--좌측사이드바-->

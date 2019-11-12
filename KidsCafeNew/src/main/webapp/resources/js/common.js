@@ -208,22 +208,6 @@ function logoutProcess(){
 	  });
 }
 
-function moveQrcode(){
-	if('${sessionScope.masterInfoVo.MCode}' != ''){
-		$('#qrcode').empty();
-		
-		var qrCode = '${sessionScope.masterInfoVo.MCode}';
-		jQuery('#qrcode').qrcode({
-			width: 225,
-			height: 225,
-			text: qrCode
-		});
-	} else {
-		alert('로그인이 필요한 메뉴입니다.');
-		return;
-	}
-}
-
 function memberOutProcess(){
 	if($('#cellPhone').val().length == 0){
 		alert('휴대폰 번호를 입력해주세요.');

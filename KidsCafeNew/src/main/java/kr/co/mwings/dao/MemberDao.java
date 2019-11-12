@@ -71,4 +71,21 @@ public class MemberDao {
 	public int deleteMemberInfo(MemberVo memberVo){
 		return sqlSession.delete(NS + "deleteMemberInfo", memberVo);
 	}
+	
+	//PointHis 테이블 데이터 추가
+	public int insertPointHis(Map<String, Object> param){
+		return sqlSession.insert(NS + "insertPointHis", param);
+	}
+	
+	//MultiticketSalesUse 테이블 데이터 삭제
+	public int deleteMultiticketSalesUse(Map<String, Object> param) {
+		return sqlSession.delete(NS + "deleteMultiticketSalesUse", param);
+	}
+	
+	//포인트 사용내역 데이터 가져오기
+	public List<Map<String, Object>> selectPointUseList(Map<String, Object> param){
+		return sqlSession.selectList(NS + "selectPointUseList", param);
+		
+	}
+	
 }

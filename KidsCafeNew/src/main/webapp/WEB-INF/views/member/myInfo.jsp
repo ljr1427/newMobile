@@ -95,7 +95,7 @@
 		            	</a>
 		            </li>
 		            <li>
-		            	<a href="/member/point.view">
+		            	<a href="/member/pointUseInfo.view">
 		            		<img src="/resources/images/icons/black/mileage.png"/>
 		            		<span>포인트 조회</span>
 		            	</a>

@@ -5,23 +5,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <jsp:include page="../common/headerWithoutJs.jsp" />  
+  <jsp:include page="../common/headerWithoutJs.jsp" />
   <script type="text/javascript">
   function moveQrcode(){
-	  if('${sessionScope.masterInfoVo.MCode}' != ''){
-	  	  $('#qrcode').empty();
-	  	  var qrCode = '${sessionScope.masterInfoVo.MCode}';
-	  	  jQuery('#qrcode').qrcode({
-	  	  	  width: 225,
-	  	  	  height: 225,
-	  	  	  text: qrCode
-	  	  });
-	  } else {
-	  	  alert('로그인이 필요한 메뉴입니다.');
-	  	  return;
-	  }
-  }
-  </script>
+		if('${sessionScope.masterInfoVo.MCode}' != ''){
+			$('#qrcode').empty();
+			
+			var qrCode = '${sessionScope.masterInfoVo.MCode}';
+			jQuery('#qrcode').qrcode({
+				width: 225,
+				height: 225,
+				text: qrCode
+			});
+		} else {
+			alert('로그인이 필요한 메뉴입니다.');
+			return;
+		}
+	}
+  </script>  
 </head>
 
 <!--좌측사이드바-->
@@ -184,7 +185,7 @@
                 	</a>
                 	</c:when>
                 	<c:otherwise>
-                	<a href="#qrCode" onclick="moveQrcode();">
+                	<a href="javascript:alert('로그인이 필요한 메뉴입니다.')">
 	                	<img src="/resources/images/icons/black/qr.png"/>
 	                	<span>QR코드</span>
                 	</a>

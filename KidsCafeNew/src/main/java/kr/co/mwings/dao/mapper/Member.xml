@@ -103,6 +103,7 @@
 			   A.Password,
 			   A.LastVisit,
 			   A.Point,
+			   replace( convert( VARCHAR, convert( MONEY, A.Point ), 1 ), '.00', '' ) cPoint,
 			   A.DisNum,
 			   A.QRCode,
 			   A.Phone,
@@ -161,7 +162,7 @@
 		       CONVERT (DATE, InDate) cIndate,
 		       FranchiseeNum,
 		       CASE WHEN (SELECT FaseName FROM FranchiseeInfo WHERE FranchiseeNum = VisitInfo.FranchiseeNum) != NULL THEN (SELECT FaseName FROM FranchiseeInfo WHERE FranchiseeNum = VisitInfo.FranchiseeNum)
-			 	          ELSE '슈퍼윙즈키즈카페' END AS fName,
+			 	    ELSE '슈퍼윙즈키즈카페' END AS fName,
 			   replace( convert( VARCHAR, convert( MONEY, Price ), 1 ), '.00', '' ) cPrice,
 		       Price
 		  FROM VisitInfo 
@@ -193,5 +194,51 @@
 		  FROM MemberInfo
 		 WHERE PHONE = #{cellPhone}		   
 	</delete>
-		
+	
+	<insert id="insertPointHis" parameterType="map">
+		INSERT INTO PointHis
+		           (
+		            DateTime,
+		            Device,
+		            MCode,
+		            FranchiseeNum,
+		            addminus,
+		            Point,
+		            Satff,
+		            comment
+		           )
+		           VALUES
+		           (
+		            GETDATE(),
+		            #{device},
+		            #{MCode},
+		            'M',
+		            #{addMinus},
+		            #{point},
+		            #{satff},
+		            #{comment}
+		           )
+	</insert>
+	
+	<delete id="deleteMultiticketSalesUse" parameterType="map">
+		DELETE
+		  FROM MultiTicketSalesUse
+		 WHERE MCode = #{MCode}
+	</delete>
+	
+	<select id="selectPointUseList" parameterType="map" resultType="map"> 
+	 SELECT indate,
+	 	    CONVERT (DATE, left(indate,8)) cIndate,
+	        goodsname,
+	        replace( convert( VARCHAR, convert( MONEY, replace(price,'-','') ), 1 ), '.00', '' ) cPrice,
+	        replace(price,'-','') price,
+	        franchiseeNum,
+	        CASE WHEN (SELECT FaseName FROM FranchiseeInfo WHERE FranchiseeNum = goodssaleinfo.FranchiseeNum) != NULL THEN (SELECT FaseName FROM FranchiseeInfo WHERE FranchiseeNum = goodssaleinfo.FranchiseeNum)
+			     WHEN goodssaleinfo.FranchiseeNum = 'M' THEN '모바일'
+			     ELSE '슈퍼윙즈키즈카페' END AS fName
+       FROM goodssaleinfo        
+      WHERE MCode = #{MCode}
+        AND GoodsName LIKE'%Point사용%'
+	</select>
+					
 </mapper>

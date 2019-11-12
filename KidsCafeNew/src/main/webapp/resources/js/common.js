@@ -209,42 +209,60 @@ function logoutProcess(){
 }
 
 function memberOutProcess(){
-	if($('#cellPhone').val().length == 0){
-		alert('휴대폰 번호를 입력해주세요.');
-		$('#cellPhone').focus();
-		return;
-	}
 	
-	if($('#cellPhone').val().length != 11){
-		alert('휴대폰 번호는 11자리입니다.');
-		$('#cellPhone').focus();
-		return;
-	}
-	
-	if($('#password').val().length == 0){
-		alert('비밀번호를 입력해주세요.');
-		$('#password').focus();
-		return;
-	}
-	
-	if($('#name').val().length == 0){
-		alert('이름을 입력해주세요.');
-		$('#name').focus();
-		return;
-	}
-	
-	if($("input:checkbox[id='pointExtinctionChk']").is(":checked") == false){
-		alert('포인트 소멸 동의 체크박스에 체크해주세요.');
-		$('#pointExtinctionChk').focus();
-		return;
-	}
-	
-	if($("input:checkbox[id='couponExtinctionChk']").is(":checked") == false){
-		alert('다회권,쿠폰삭제 동의 체크박스에 체크해주세요.');
-		$('#couponExtinctionChk').focus();
-		return;
-	}
-	
-	$('#memberOutForm').submit();
+	$.ajax({
+		  url: "/member/memberOutCheck.json",
+		  type: "POST",
+		  data: {},
+		  success: function(result){
+			  
+			  if(result.resultCode == '00'){
+				  if(result.EntFlag == '1'){
+					  alert('입장 중에는 탈퇴가 되지 않습니다.');
+				  } else if(result.EntFlag == '0'){
+					    if($('#cellPhone').val().length == 0){
+							alert('휴대폰 번호를 입력해주세요.');
+							$('#cellPhone').focus();
+							return;
+						}
+						
+						if($('#cellPhone').val().length != 11){
+							alert('휴대폰 번호는 11자리입니다.');
+							$('#cellPhone').focus();
+							return;
+						}
+						
+						if($('#password').val().length == 0){
+							alert('비밀번호를 입력해주세요.');
+							$('#password').focus();
+							return;
+						}
+						
+						if($('#name').val().length == 0){
+							alert('이름을 입력해주세요.');
+							$('#name').focus();
+							return;
+						}
+						
+						if($("input:checkbox[id='pointExtinctionChk']").is(":checked") == false){
+							alert('포인트 소멸 동의 체크박스에 체크해주세요.');
+							$('#pointExtinctionChk').focus();
+							return;
+						}
+						
+						if($("input:checkbox[id='couponExtinctionChk']").is(":checked") == false){
+							alert('다회권,쿠폰삭제 동의 체크박스에 체크해주세요.');
+							$('#couponExtinctionChk').focus();
+							return;
+						}
+						
+						$('#memberOutForm').submit();
+				  }
+				  
+			  } else {
+				  alert('회원탈퇴 중 오류가 발생했습니다.');
+			  }
+		  }
+	  });	
 	
 }

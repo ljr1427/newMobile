@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.mwings.constants.CommonConstants;
 import kr.co.mwings.dao.MemberDao;
@@ -51,6 +52,7 @@ public class MemberService {
 	 * @param memberVo
 	 * @return
 	 */
+	@Transactional
 	public String memberJoinProcess(MemberVo memberVo) {
 		String result = "fail";
 		
@@ -106,10 +108,18 @@ public class MemberService {
         	}
         	        	
         	if(insertCnt == memberVo.getFamilyName().size()) {
-        		result = "succ";
-        	} else {
-        		memberDao.deleteMasterInfo(param);
-        	}
+        		Map<String, Object> pointParam = new HashMap<String, Object>();
+            	pointParam.put("device", "2");
+            	pointParam.put("MCode", strMcode);
+            	pointParam.put("addMinus", "1");
+            	pointParam.put("point", "1000");
+            	pointParam.put("satff", "");
+            	pointParam.put("comment", "회원가입감사");
+            	
+            	if(memberDao.insertPointHis(pointParam) > 0) {
+            		result = "succ";	
+            	}
+        	} 
         } 
         
 		return result;
@@ -203,6 +213,31 @@ public class MemberService {
 		request.setAttribute("storeUseInfo", memberDao.selectStoreUseInfo(param));
 	}
 	
+	public JSONObject memberOutCheck(HttpServletRequest request) {
+		JSONObject result = new JSONObject();
+		result.put("resultCode", CommonConstants.RESULT_FAIL);
+		
+		HttpSession session = request.getSession();
+		MasterInfoVo masterInfoVo = (MasterInfoVo) session.getAttribute("masterInfoVo");
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("MCode", masterInfoVo.getMCode());
+		
+		MemberVo memberVo = new MemberVo();
+		memberVo.setMcode(masterInfoVo.getMCode());
+		memberVo.setCellPhone(masterInfoVo.getPhone());
+		
+		Map<String, Object > myMasterInfo = memberDao.selectMyMasterInfo(memberVo);
+		
+		if(myMasterInfo != null) {
+			if(!"null".equals(String.valueOf(myMasterInfo.get("EntFlag")))) {
+				result.put("resultCode", CommonConstants.RESULT_SUCCESS);
+				result.put("EntFlag", String.valueOf(myMasterInfo.get("EntFlag"))); 
+			}
+		}
+		
+		return result;		
+	}
+	
 	/**
 	 * 회원 탈퇴 처리
 	 * @param memberVo
@@ -219,11 +254,32 @@ public class MemberService {
 		if(memberDao.deleteMasterInfoByMemberOut(memberVo) > 0) {
 			if(memberDao.deleteMemberInfo(memberVo) > 0) {
 				HttpSession session = request.getSession();
+				MasterInfoVo masterInfoVo = (MasterInfoVo) session.getAttribute("masterInfoVo");
+				
+				Map<String, Object> param = new HashMap<String, Object>();
+				param.put("MCode", masterInfoVo.getMCode());
+				
+				memberDao.deleteMultiticketSalesUse(param);
+				
 				session.invalidate();
 				result = "succ";
 			}
 		}
 		request.setAttribute("result", result);
+	}
+	
+	public void pointUseInfo(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		MasterInfoVo masterInfoVo = (MasterInfoVo) session.getAttribute("masterInfoVo");
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("MCode", masterInfoVo.getMCode());
+		
+		MemberVo memberVo = new MemberVo();
+		memberVo.setMcode(masterInfoVo.getMCode());
+		memberVo.setCellPhone(masterInfoVo.getPhone());
+		
+		request.setAttribute("masterInfo", memberDao.selectMyMasterInfo(memberVo));		
+		request.setAttribute("pointUseList", memberDao.selectPointUseList(param));
 	}
 	
 	/**

@@ -181,6 +181,21 @@ public class MemberController {
 	}
 	
 	/**
+	 * 회원 탈퇴 시 입장중인지 확인 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "memberOutCheck.json", method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public JSONObject memberOutCheck(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject result = new JSONObject();
+		result = memberService.memberOutCheck(request);
+		return result;
+	}	
+	
+	/**
 	 * 회원탈퇴 메뉴
 	 * @param request
 	 * @param response
@@ -205,6 +220,20 @@ public class MemberController {
 		ModelAndView mav = new ModelAndView();
 		memberService.memberOutProcess(paramMap, request);
 		mav.setViewName("/member/memberOutResult");
+		return mav;
+	}
+	
+	/**
+	 * 포인트 내역 메뉴
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "pointUseInfo.view", method = {RequestMethod.GET, RequestMethod.POST})
+	public ModelAndView pointUseInfo(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		memberService.pointUseInfo(request);
+		mav.setViewName("/member/pointUseInfo");
 		return mav;
 	}
 	

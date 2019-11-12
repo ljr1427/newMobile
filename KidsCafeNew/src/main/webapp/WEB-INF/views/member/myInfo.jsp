@@ -68,7 +68,7 @@
 		              	</a>
 		              </li>
 		              <li>
-		              	<a href="" data-panel="right" class="open-panel">
+		              	<a href="">
 		              		<img src="/resources/images/icons/black/family.png" alt="" title="" />
 		              		<span>등록가족<br>${masterInfo.Num}명</span>
 		              	</a>
@@ -90,8 +90,14 @@
 		            <li><a href=""><img src="/resources/images/icons/black/modify.png"/><span>가족정보 수정(매장 카운터에 요청해 주세요)</span></a></li>
 		            <li>
 		            	<a href="/member/pointAndStoreInfo.view">
-		            		<img src="/resources/images/icons/black/modify.png"/>
-		            		<span>포인트 및 매장이용정보</span>
+		            		<img src="/resources/images/icons/black/shop.png"/>
+		            		<span>매장이용정보</span>
+		            	</a>
+		            </li>
+		            <li>
+		            	<a href="/member/point.view">
+		            		<img src="/resources/images/icons/black/mileage.png"/>
+		            		<span>포인트 조회</span>
 		            	</a>
 		            </li>
 		            <li>
